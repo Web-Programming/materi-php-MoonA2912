@@ -13,7 +13,8 @@
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="{{ url("/") }}">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Program Studi</li>
+                  <li class="breadcrumb-item"><a href="{{ url("/prodi") }}">Program Studi</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Create Program Studi</li>
                 </ol>
               </div>
             </div>
@@ -32,7 +33,7 @@
                 <!-- Default box -->
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title">Program Studi</h3>
+                    <h3 class="card-title">Create Program Studi</h3>
                     <div class="card-tools">
                       <button
                         type="button"
@@ -54,41 +55,30 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <a href="{{ url('prodi/create') }}" class="btn btn-success" >Buat Prodi Baru</a>
-                    @if (session('status'))
+                @if (session('status'))
                   <div class = "alert alert = success">
-                    {{ session('status') }}
+                    ((session ('status')))
                   </div>
-                    @endif
-                    <table class="table table-bordered table-striped">
-                      <thead>
-                        <tr>
-                          <th>No</th>
-                          <th>Nama Prodi</th>
-                          <th>Kode Prodi</th>
-                          <th>Aksi</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @foreach ( $listprodi as $prodi)
-                          <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $prodi->nama }}</td>
-                            <td>{{ $prodi->kode_prodi }}</td>
-                            <td>
-                              <a href="{{ url('prodi/'.$prodi->id.'/edit') }}" >Edit</a>
-                              <form action="{{ url('prodi/'.$prodi->id) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-link">Delete</button>
-                              </form>
-                            </td>
-                          </tr>
-                        @endforeach
-                      </tbody>                 
-                    </table>
+                @endif
+                <form method="post" action="{{ url("prodi") }}">
+                  @csrf
+                  <div class="mb-3">
+                    <label >Nama prodi</label>
+                    <input type="text" name="nama" class="form-control" value="{{ old('nama') }}">
+                    @Error('nama')
+                      <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                  </div>
+                   <div class="mb-3">
+                    <label >Kode Prodi</label>
+                    <input type="text" name="kode_prodi" class="form-control" value="{{ old('kode_prodi') }}">
+                    @Error('kode_prodi')
+                      <div class="text-danger">{{ $message }} </div>
+                    @enderror
+                  </div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
 
-                  </div>
+                  </form>
                   <!-- /.card-body -->
                   <div class="card-footer">Footer</div>
                   <!-- /.card-footer-->

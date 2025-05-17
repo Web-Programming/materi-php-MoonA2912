@@ -21,4 +21,5 @@ Route::get('/berita/{id}/{judul?}', function($id,$judul=null){
 });
 
 //membuat rute ke halaman prodi index melalui controller prodicontroller
-Route::get('/prodi/index',[prodiController::class,'index']);
+
+Route::resource('prodi', ProdiController::class);
