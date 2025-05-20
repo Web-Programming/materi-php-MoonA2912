@@ -32,12 +32,20 @@ class ProdiController extends Controller
     {
         $validateData= $request->validate(
             ['nama' => 'required|min:5|max:20',
-            'kode_prodi'=>'|min:2|max:2']
+            'kode_prodi'=>'|min:2|max:2',
+            'logo' => 'image|nimes:jpeg,png,jpg,gif,svg|max:2048']
         );
 
         $prodi=new Prodi();
         $prodi->nama=$validateData['nama']; //$request-> nama(bisa tapi belom aman)
         $prodi->kodeprodi=$validateData['kode_prodi'];
+
+        if($request->hasFile('logo')){
+            $file=$request->file('logo');
+            $filename=time().'.'.$file->getClientOriginalExtension();
+            $file->move(public_path('images'),$filename);
+            $prodi->logo=$filename;
+        }
         $prodi->save();
 
         return redirect('prodi')->with("status","Data Program Studi berhasil disimpan");
@@ -53,7 +61,7 @@ class ProdiController extends Controller
         $prodi=Prodi::find($id);
 
         //buat view detail di view/prodi
-        return view("prodi.detail",['detailprodi'=> $prodi]);
+        return view("prodi.detail",['prodi'=> $prodi]);
 
     }
 
@@ -63,7 +71,7 @@ class ProdiController extends Controller
     public function edit(string $id)
     {
          $prodi=Prodi::find($id);
-          return view("prodi.edit",['editprodi'=> $prodi]);
+          return view("prodi.edit",['prodi'=> $prodi]);
     }
 
     /**
@@ -71,7 +79,18 @@ class ProdiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //untuk menerima data dari form edit
+        $validateData= $request->validate(
+            ['nama' => 'required|min:5|max:20',
+            'kode_prodi'=>'|min:2|max:2']
+        );
+
+        $prodi= Prodi::find($id);
+        $prodi->nama=$validateData['nama']; //$request-> nama(bisa tapi belom aman)
+        $prodi->kodeprodi=$validateData['kode_prodi'];
+        $prodi->save();
+
+        return redirect('prodi')->with("status","Data Program Studi berhasil di-update");
     }
 
     /**
@@ -79,6 +98,10 @@ class ProdiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //ambil data prodi berdasarkan id
+        $prodi=Prodi::find(id);
+
+        $prodi->delete();
+        return redirect("prodi") ->with("status","Data Program Studi Berhasil Dihapus");
     }
 }

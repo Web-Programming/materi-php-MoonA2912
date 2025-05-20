@@ -13,7 +13,7 @@
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="{{ url("/") }}">Home</a></li>
-                  <li class="breadcrumb-item"><a href="{{ url("/prodi".$prodi->id) }}">Program Studi</a></li>
+                  <li class="breadcrumb-item"><a href="{{ url("/prodi") }}">Program Studi</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Edit Program Studi</li>
                 </ol>
               </div>
@@ -33,7 +33,7 @@
                 <!-- Default box -->
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title">Create Program Studi</h3>
+                    <h3 class="card-title">Edit Program Studi</h3>
                     <div class="card-tools">
                       <button
                         type="button"
@@ -55,14 +55,10 @@
                     </div>
                   </div>
                   <div class="card-body">
-                @if (session('status'))
-                  <div class = "alert alert = success">
-                    ((session ('status')))
-                  </div>
-                @endif
-                <form method="post" action="{{ url("prodi") }}">
+               
+                <form method="post" action="{{ url("prodi/".$prodi->id) }}">
                   @csrf
-
+                  @method("PUT")
                   <div class="mb-3">
                     <label >Nama prodi</label>
                     <input type="text" name="nama" class="form-control" value="{{ old('nama', $prodi->nama) }}">
@@ -77,8 +73,7 @@
                       <div class="text-danger">{{ $message }} </div>
                     @enderror
                   </div>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-
+                     <button type="submit" class="btn btn-primary">Simpan</button>
                   </form>
                   <!-- /.card-body -->
                   <div class="card-footer">Footer</div>

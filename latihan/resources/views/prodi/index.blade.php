@@ -14,6 +14,7 @@
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="{{ url("/") }}">Home</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Program Studi</li>
+                  <li class="breadcrumb-item active" aria-current="page">Detail Program Studi</li>
                 </ol>
               </div>
             </div>
@@ -74,9 +75,10 @@
                           <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $prodi->nama }}</td>
-                            <td>{{ $prodi->kode_prodi }}</td>
+                            <td>{{ $prodi->kodeprodi }}</td>
                             <td>
                               <a href="{{ url('prodi/'.$prodi->id.'/edit') }}" >Edit</a>
+                              <a href="{{ url('prodi/'.$prodi->id.'/detail') }}" >Detail</a>
                               <form action="{{ url('prodi/'.$prodi->id) }}" method="post">
                                 @csrf
                                 @method('DELETE')
