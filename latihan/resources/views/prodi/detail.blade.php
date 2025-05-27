@@ -1,6 +1,6 @@
 @extends('layout.master')
 
-@section('title', "Halaman List Prodi")
+@section('title', "Halaman Detail Prodi")
 
 @section('content')
         <!--begin::App Content Header-->
@@ -14,7 +14,7 @@
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="{{ url("/") }}">Home</a></li>
                   <li class="breadcrumb-item"><a href="{{ url("/prodi") }}">Program Studi</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Edit Program Studi</li>
+                  <li class="breadcrumb-item active" aria-current="page">Detail Program Studi</li>
                 </ol>
               </div>
             </div>
@@ -33,7 +33,7 @@
                 <!-- Default box -->
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title">Edit Program Studi</h3>
+                    <h3 class="card-title">Detail Program Studi</h3>
                     <div class="card-tools">
                       <button
                         type="button"
@@ -55,14 +55,14 @@
                     </div>
                   </div>
                   <div class="card-body">
-                           ID prodi = {{ $prodi->id }}<br>
-            Nama prodi = {{ $prodi->nama }}<br>
-            Kode prodi = {{ $prodi->kodeprodi }}<br>
-            Tanggal Buat = {{ $prodi->created_at }}<br>
-            Tanggal Update = {{ $prodi->updated_at }}<br>
- 
-</div>
-                  </form>
+                    
+                    ID Prodi : {{ $prodi->id }} <br>
+                    Nama Prodi : {{ $prodi->nama }} <br>
+                    Kode Prodi : {{ $prodi->kode_prodi }} <br>
+                    Tanggal Buat : {{ $prodi->created_at }} <br>
+                    Tanggal Update : {{ $prodi->updated_at }} <br>
+                    
+                  </div>
                   <!-- /.card-body -->
                   <div class="card-footer">Footer</div>
                   <!-- /.card-footer-->
@@ -76,6 +76,3 @@
         </div>
         <!--end::App Content-->
 @endsection
-
-
-

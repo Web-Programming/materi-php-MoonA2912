@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Prodi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProdiController extends Controller
 {
@@ -11,6 +12,8 @@ class ProdiController extends Controller
      * Display a listing of the resource.
      */
     public function index() {
+        Gate::authorize('viewAny', Prodi::class);
+
         $listprodi = Prodi::get();
         return view("prodi.index", 
         ['listprodi' => $listprodi]
@@ -22,6 +25,7 @@ class ProdiController extends Controller
      */
     public function create()
     {
+        Gate::authorize('viewAny', Prodi::class);
         return view("prodi.create");
     }
 
@@ -30,39 +34,46 @@ class ProdiController extends Controller
      */
     public function store(Request $request)
     {
-        $validateData= $request->validate(
-            ['nama' => 'required|min:5|max:20',
-            'kode_prodi'=>'|min:2|max:2',
-            'logo' => 'image|nimes:jpeg,png,jpg,gif,svg|max:2048']
+        $validateData = $request->validate(
+            [
+                'nama' => 'required|min:5|max:20',
+                'kode_prodi' => 'required|min:2|max:2',
+                'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                ]
         );
 
-        $prodi=new Prodi();
-        $prodi->nama=$validateData['nama']; //$request-> nama(bisa tapi belom aman)
-        $prodi->kodeprodi=$validateData['kode_prodi'];
-
-        if($request->hasFile('logo')){
-            $file=$request->file('logo');
-            $filename=time().'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('images'),$filename);
-            $prodi->logo=$filename;
+        $prodi = new Prodi();
+        $prodi->nama = $validateData['nama']; //$request->nama
+        $prodi->kode_prodi = $validateData['kode_prodi'];
+        //upload logo
+        if ($request->hasFile('logo')) {
+            $file = $request->file(key: 'logo');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images'), $filename);
+            $prodi->logo = $filename;
         }
+        
         $prodi->save();
 
-        return redirect('prodi')->with("status","Data Program Studi berhasil disimpan");
-        }
-    
+        //Prodi::create([
+        //    'nama' =>  $validateData['nama'],
+        //    'kode_prodi' => $validateData['kode_prodi']
+        //]);
+
+        return redirect("prodi")->with("status", "Data Program Studi berhasil disimpan!");
+    }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
+        Gate::authorize('view', Prodi::class);
         //select prodi by id
-        $prodi=Prodi::find($id);
+        $prodi = Prodi::find($id);
 
-        //buat view detail di view/prodi
-        return view("prodi.detail",['prodi'=> $prodi]);
-
+        //buat view detail di folder view/prodi
+        return view("prodi.detail", ['prodi' => $prodi]);
     }
 
     /**
@@ -70,8 +81,14 @@ class ProdiController extends Controller
      */
     public function edit(string $id)
     {
-         $prodi=Prodi::find($id);
-          return view("prodi.edit",['prodi'=> $prodi]);
+        Gate::authorize('update', Prodi::class);
+        //select prodi by id
+        $prodi = Prodi::find($id);
+
+        //buat view edit di folder view/prodi
+        return view("prodi.edit", 
+            ['prodi' => $prodi]
+        );
     }
 
     /**
@@ -79,18 +96,21 @@ class ProdiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //untuk menerima data dari form edit
-        $validateData= $request->validate(
-            ['nama' => 'required|min:5|max:20',
-            'kode_prodi'=>'|min:2|max:2']
+        Gate::authorize('update', Prodi::class);
+        $validateData = $request->validate(
+            [
+                'nama' => 'required|min:5|max:20',
+                'kode_prodi' => 'required|min:2|max:2'
+                ]
         );
 
-        $prodi= Prodi::find($id);
-        $prodi->nama=$validateData['nama']; //$request-> nama(bisa tapi belom aman)
-        $prodi->kodeprodi=$validateData['kode_prodi'];
+        $prodi = Prodi::find($id); //ambil data prodi berdasarkan id
+        $prodi->nama = $validateData['nama']; //$request->nama
+        $prodi->kode_prodi = $validateData['kode_prodi'];
         $prodi->save();
 
-        return redirect('prodi')->with("status","Data Program Studi berhasil di-update");
+        return redirect("prodi")
+        ->with("status", "Data Program Studi berhasil diupdate!");
     }
 
     /**
@@ -98,10 +118,11 @@ class ProdiController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('delete', Prodi::class);
         //ambil data prodi berdasarkan id
-        $prodi=Prodi::find(id);
-
+        $prodi = Prodi::find($id);
+        //hapus data prodi
         $prodi->delete();
-        return redirect("prodi") ->with("status","Data Program Studi Berhasil Dihapus");
+        return redirect("prodi")->with("status", "Data Program Studi berhasil dihapus!");
     }
 }
